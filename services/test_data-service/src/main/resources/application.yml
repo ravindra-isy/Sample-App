@@ -1,0 +1,76 @@
+server:
+  port: 8099
+# Database properties
+spring:
+  datasource:
+    driverClassName: ${DB_DRIVER_CLASS:org.postgresql.Driver}
+    platform: postgres
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:1234root}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_SERVER_PORT:5432}/${DB_NAME:test_data}?createDatabaseIfNotExist=true
+    initialization-mode: always
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    # set generate-ddl as false before pushing to production
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    properties:
+      hibernate:
+        default_schema: public
+        # Set the ddl-auto to none before pushing to production.
+        ddl-auto: create-drop
+        temp:
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          lob:
+            non_contextual_creation: true
+# API Documentation settings
+com.sampleapp.configuration:
+  security:
+    cors:
+      headers:
+        allowed-origins: '*'
+        allowed-methods:
+          - OPTIONS
+          - POST
+          - GET
+          - PATCH
+          - PUT
+          - DELETE
+        allowed-headers:
+          - Origin
+          - Accept
+          - X-Requested-With
+          - Content-Type
+          - Access-Control-Request-Method
+          - Access-Control-Request-Headers
+          - Authorization
+        max-age: 3600
+        allow-credentials: true
+    endpoints:
+      unsecured:
+        - "/v3/api-docs/**"
+        - "/swagger-ui.html"
+        - "/swagger-ui/**"
+    auth:
+      token:
+        secret: isymphony
+        expiration-interval-in-hours: 168
+  api:
+    documentation:
+      title: test_data-service
+      description: Sample App with auth login
+      # Update the license and licenseUrl.
+      license: GNU Lesser General Public License
+      licenseUrl: https://www.gnu.org/licenses/lgpl-3.0.en.html
+      version: 1.0.0
+      contact:
+        name: Ravindra Engle
+        email: Ravindra Engle
+      base-package: "com.sampleapp"
+      security-schema:
+        name: bearerAuth
+        scheme: bearer
+        type: HTTP
+        bearerFormat: JWT
